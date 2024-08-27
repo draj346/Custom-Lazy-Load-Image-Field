@@ -5,20 +5,16 @@ VisualStudioVersion = 17.9.34714.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Environment", "Environment", "{FE249CDF-AADF-4F3D-B199-0DF4376575E1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Feature", "Feature", "{C47A61C0-64CA-4618-8698-51155367F0DD}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Foundation", "Foundation", "{D9DE8412-988B-448C-890C-33B6C0A72290}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Project", "Project", "{A6BC236D-3485-4412-A1A3-8B9A94D99C06}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Learning.Environment.CMS", "src\Environment\website\Learning.Environment.CMS.csproj", "{2CA64A1D-5E04-4868-B649-6A6887B572A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.Environment.CMS", "src\Environment\website\Sitecore.Environment.CMS.csproj", "{2CA64A1D-5E04-4868-B649-6A6887B572A9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8FB744A4-657B-4A68-8691-A9C928D3F499} = {8FB744A4-657B-4A68-8691-A9C928D3F499}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CustomFields", "CustomFields", "{7F41652F-CDDA-4889-9703-8860A359DE82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Learning.Foundation.CustomFields", "src\Foundation\CustomFields\website\Learning.Foundation.CustomFields.csproj", "{8FB744A4-657B-4A68-8691-A9C928D3F499}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.Foundation.CustomFields", "src\Foundation\CustomFields\website\Sitecore.Foundation.CustomFields.csproj", "{8FB744A4-657B-4A68-8691-A9C928D3F499}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
