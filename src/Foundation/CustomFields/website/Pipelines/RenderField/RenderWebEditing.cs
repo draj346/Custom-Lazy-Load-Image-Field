@@ -29,22 +29,22 @@ namespace Learning.Foundation.Pipelines.RenderField
         {
             if (args != null && (args.FieldTypeKey == "lazy load image"))
             {
-                Assert.ArgumentNotNull((object)args, nameof(args));
-                if (!RenderWebEditing.CanRenderField(args))
+                Assert.ArgumentNotNull(args, nameof(args));
+                if (!CanRenderField(args))
                     return;
                 Field field = args.Item.Fields[args.FieldName];
                 Item obj = field.Item;
                 string str = obj[FieldIDs.Revision].Replace("-", string.Empty);
-                string controlID = "fld_" + (object)obj.ID.ToShortID() + "_" + (object)field.ID.ToShortID() + "_" + (object)obj.Language + "_" + (object)obj.Version + "_" + str + "_" + (object)MainUtil.GetSequencer();
-                HtmlTextWriter output = new HtmlTextWriter((TextWriter)new StringWriter());
+                string controlID = "fld_" + obj.ID.ToShortID() + "_" + field.ID.ToShortID() + "_" + obj.Language + "_" + obj.Version + "_" + str + "_" + MainUtil.GetSequencer();
+                HtmlTextWriter output = new HtmlTextWriter(new StringWriter());
                 if (args.EnclosingTag.Length > 0)
                     output.Write("<{0}>", (object)args.EnclosingTag);
-                string rawValueContainer = this.GetRawValueContainer(field, controlID);
+                string rawValueContainer = GetRawValueContainer(field, controlID);
                 output.Write(rawValueContainer);
                 if (args.DisableWebEditContentEditing && args.DisableWebEditFieldWrapping)
-                    this.RenderWrapperlessField(output, args, field, controlID);
+                    RenderWrapperlessField(output, args, field, controlID);
                 else
-                    this.RenderWrappedField(output, args, field, controlID);
+                    RenderWrappedField(output, args, field, controlID);
             }
         }
 
@@ -55,7 +55,7 @@ namespace Learning.Foundation.Pipelines.RenderField
         /// </returns>
         public static bool CanRenderField(RenderFieldArgs args)
         {
-            if (!RenderWebEditing.CanWebEdit(args) && !args.WebEditParameters.ContainsKey("sc-highlight-contentchange") || args.Item == null || !RenderWebEditing.CanEditItem(args.Item))
+            if (!CanWebEdit(args) && !args.WebEditParameters.ContainsKey("sc-highlight-contentchange") || args.Item == null || !CanEditItem(args.Item))
                 return false;
             Field field = args.Item.Fields[args.FieldName];
             return field != null && field.CanUserWrite(Context.User);
@@ -70,7 +70,7 @@ namespace Learning.Foundation.Pipelines.RenderField
         /// </returns>
         private static bool CanEditItem(Item item)
         {
-            Assert.ArgumentNotNull((object)item, nameof(item));
+            Assert.ArgumentNotNull(item, nameof(item));
             return (Context.IsAdministrator || !item.Locking.IsLocked() || item.Locking.HasLock()) && item.Access.CanWrite() && item.Access.CanWriteLanguage() && !item.Appearance.ReadOnly;
         }
 
@@ -97,23 +97,23 @@ namespace Learning.Foundation.Pipelines.RenderField
           Field field,
           string controlID)
         {
-            Assert.ArgumentNotNull((object)output, nameof(output));
-            Assert.ArgumentNotNull((object)args, nameof(args));
-            Assert.ArgumentNotNull((object)controlID, nameof(controlID));
-            Tag fieldTag = RenderWebEditing.CreateFieldTag("code", args, controlID);
+            Assert.ArgumentNotNull(output, nameof(output));
+            Assert.ArgumentNotNull(args, nameof(args));
+            Assert.ArgumentNotNull(controlID, nameof(controlID));
+            Tag fieldTag = CreateFieldTag("code", args, controlID);
             fieldTag.Class = "scpm";
             fieldTag.Add("kind", "open").Add("type", "text/sitecore").Add("chromeType", nameof(field));
             string str = args.Result.FirstPart;
             if (string.IsNullOrEmpty(str))
             {
                 fieldTag.Add("scWatermark", "true");
-                string defaultText = RenderWebEditing.GetDefaultText(args);
+                string defaultText = GetDefaultText(args);
                 str = defaultText;
                 if (StringUtil.RemoveTags(defaultText) == defaultText)
                     str = "<span class='scTextWrapper'>" + defaultText + "</span>";
             }
-            this.AddParameters(fieldTag, args);
-            string fieldData = RenderWebEditing.GetFieldData(args, field, controlID);
+            AddParameters(fieldTag, args);
+            string fieldData = GetFieldData(args, field, controlID);
             fieldTag.InnerHtml = fieldData;
             output.Write(fieldTag.ToString());
             output.Write(str);
@@ -134,26 +134,26 @@ namespace Learning.Foundation.Pipelines.RenderField
           Field field,
           string controlID)
         {
-            Assert.ArgumentNotNull((object)output, nameof(output));
-            Assert.ArgumentNotNull((object)args, nameof(args));
-            Assert.ArgumentNotNull((object)controlID, nameof(controlID));
-            string fieldData = RenderWebEditing.GetFieldData(args, field, controlID);
+            Assert.ArgumentNotNull(output, nameof(output));
+            Assert.ArgumentNotNull(args, nameof(args));
+            Assert.ArgumentNotNull(controlID, nameof(controlID));
+            string fieldData = GetFieldData(args, field, controlID);
             if (args.Before.Length > 0)
                 output.Write(args.Before);
-            output.Write("<span class=\"scChromeData\">{0}</span>", (object)fieldData);
-            Tag fieldTag = RenderWebEditing.CreateFieldTag(this.GetEditableElementTagName(args), args, controlID);
+            output.Write("<span class=\"scChromeData\">{0}</span>", fieldData);
+            Tag fieldTag = CreateFieldTag(GetEditableElementTagName(args), args, controlID);
             fieldTag.Class = "scWebEditInput";
             if (!args.DisableWebEditContentEditing)
                 fieldTag.Add("contenteditable", "true");
             string str1 = args.Result.FirstPart;
-            string defaultText = RenderWebEditing.GetDefaultText(args);
+            string defaultText = GetDefaultText(args);
             fieldTag.Add("scDefaultText", defaultText);
             if (string.IsNullOrEmpty(str1))
             {
                 fieldTag.Add("scWatermark", "true");
                 str1 = defaultText;
             }
-            this.AddParameters(fieldTag, args);
+            AddParameters(fieldTag, args);
             output.Write(fieldTag.Start());
             output.Write(str1);
             args.Result.FirstPart = output.InnerWriter.ToString();
@@ -161,7 +161,7 @@ namespace Learning.Foundation.Pipelines.RenderField
             if (args.After.Length > 0)
                 str2 += args.After;
             if (args.EnclosingTag.Length > 0)
-                str2 = string.Format("{1}</{0}>", (object)args.EnclosingTag, (object)str2);
+                str2 = string.Format("{1}</{0}>", args.EnclosingTag, str2);
             args.Result.LastPart += str2;
         }
 
@@ -170,8 +170,8 @@ namespace Learning.Foundation.Pipelines.RenderField
         /// <param name="args">The arguments.</param>
         private void AddParameters(Tag tag, RenderFieldArgs args)
         {
-            Assert.ArgumentNotNull((object)tag, nameof(tag));
-            Assert.ArgumentNotNull((object)args, nameof(args));
+            Assert.ArgumentNotNull(tag, nameof(tag));
+            Assert.ArgumentNotNull(args, nameof(args));
             if (args.WebEditParameters.Count <= 0)
                 return;
             UrlString urlString = new UrlString();
@@ -198,9 +198,9 @@ namespace Learning.Foundation.Pipelines.RenderField
         /// <returns>The field value HTML.</returns>
         private string GetRawValueContainer(Field field, string controlID)
         {
-            Assert.ArgumentNotNull((object)field, nameof(field));
-            Assert.ArgumentNotNull((object)controlID, nameof(controlID));
-            return "<input id='{0}' class='scFieldValue' name='{0}' type='hidden' value=\"{1}\" />".FormatWith((object)controlID, (object)HttpUtility.HtmlEncode(field.Value));
+            Assert.ArgumentNotNull(field, nameof(field));
+            Assert.ArgumentNotNull(controlID, nameof(controlID));
+            return "<input id='{0}' class='scFieldValue' name='{0}' type='hidden' value=\"{1}\" />".FormatWith(controlID, HttpUtility.HtmlEncode(field.Value));
         }
 
         /// <summary>Gets the default image.</summary>
@@ -208,20 +208,20 @@ namespace Learning.Foundation.Pipelines.RenderField
         /// <returns>The default image.</returns>
         private static string GetDefaultText(RenderFieldArgs args)
         {
-            Assert.ArgumentNotNull((object)args, nameof(args));
+            Assert.ArgumentNotNull(args, nameof(args));
             string @string = StringUtil.GetString(args.RenderParameters["default-text"], string.Empty);
             using (new LanguageSwitcher(WebUtil.GetCookieValue("shell", "lang", Context.Language.Name)))
             {
                 if (@string.IsNullOrEmpty())
                 {
                     Database database = Factory.GetDatabase("core");
-                    Assert.IsNotNull((object)database, "core");
+                    Assert.IsNotNull(database, "core");
                     Item obj = database.GetItem("/sitecore/content/Applications/WebEdit/WebEdit Texts");
-                    Assert.IsNotNull((object)obj, "/sitecore/content/Applications/WebEdit/WebEdit Texts");
+                    Assert.IsNotNull(obj, "/sitecore/content/Applications/WebEdit/WebEdit Texts");
                     @string = obj["Default Text"];
                 }
                 if (string.Compare(args.RenderParameters["show-title-when-blank"], "true", StringComparison.InvariantCultureIgnoreCase) == 0)
-                    @string = RenderWebEditing.GetFieldDisplayName(args) + ": " + @string;
+                    @string = GetFieldDisplayName(args) + ": " + @string;
             }
             return @string;
         }
@@ -231,13 +231,13 @@ namespace Learning.Foundation.Pipelines.RenderField
         /// <returns>The get field display name.</returns>
         private static string GetFieldDisplayName(RenderFieldArgs args)
         {
-            Assert.IsNotNull((object)args, nameof(args));
-            Assert.IsNotNull((object)args.Item, "item");
+            Assert.IsNotNull(args, nameof(args));
+            Assert.IsNotNull(args.Item, "item");
             Item obj;
             if (string.Compare(WebUtil.GetCookieValue("shell", "lang", Context.Language.Name), args.Item.Language.Name, StringComparison.InvariantCultureIgnoreCase) != 0)
             {
                 obj = args.Item.Database.GetItem(args.Item.ID);
-                Assert.IsNotNull((object)obj, "Item");
+                Assert.IsNotNull(obj, "Item");
             }
             else
                 obj = args.Item;
@@ -254,13 +254,13 @@ namespace Learning.Foundation.Pipelines.RenderField
           Field field,
           string controlID)
         {
-            Assert.ArgumentNotNull((object)commands, nameof(commands));
-            Assert.ArgumentNotNull((object)field, nameof(field));
-            Assert.ArgumentNotNull((object)controlID, nameof(controlID));
+            Assert.ArgumentNotNull(commands, nameof(commands));
+            Assert.ArgumentNotNull(field, nameof(field));
+            Assert.ArgumentNotNull(controlID, nameof(controlID));
             Item obj = field.Item;
             string newValue;
             if (UserOptions.WebEdit.UsePopupContentEditor)
-                newValue = "javascript:Sitecore.WebEdit.postRequest(\"webedit:edit(id=" + (object)obj.ID + ",language=" + (object)obj.Language + ",version=" + (object)obj.Version + ")\")";
+                newValue = "javascript:Sitecore.WebEdit.postRequest(\"webedit:edit(id=" + obj.ID + ",language=" + obj.Language + ",version=" + obj.Version + ")\")";
             else
                 newValue = new UrlString(WebUtil.GetRawUrl())
                 {
@@ -283,19 +283,19 @@ namespace Learning.Foundation.Pipelines.RenderField
         /// <param name="controlID"> </param>
         private static string GetFieldData(RenderFieldArgs args, Field field, string controlID)
         {
-            Assert.ArgumentNotNull((object)args, nameof(args));
-            Assert.ArgumentNotNull((object)field, nameof(field));
-            Assert.ArgumentNotNull((object)controlID, nameof(controlID));
+            Assert.ArgumentNotNull(args, nameof(args));
+            Assert.ArgumentNotNull(field, nameof(field));
+            Assert.ArgumentNotNull(controlID, nameof(controlID));
             Item obj = field.Item;
-            Assert.IsNotNull((object)Context.Site, "site");
+            Assert.IsNotNull(Context.Site, "site");
             using (new LanguageSwitcher(WebUtil.GetCookieValue("shell", "lang", Context.Site.Language)))
             {
                 GetChromeDataArgs args1 = new GetChromeDataArgs(nameof(field), obj, args.Parameters);
-                args1.CustomData[nameof(field)] = (object)field;
-                args1.CustomData["fieldWebEditParameters"] = (object)args.WebEditParameters;
+                args1.CustomData[nameof(field)] = field;
+                args1.CustomData["fieldWebEditParameters"] = args.WebEditParameters;
                 GetChromeDataPipeline.Run(args1);
                 ChromeData chromeData = args1.ChromeData;
-                RenderWebEditing.SetCommandParametersValue((IEnumerable<WebEditButton>)chromeData.Commands, field, controlID);
+                SetCommandParametersValue(chromeData.Commands, field, controlID);
                 return chromeData.ToJson();
             }
         }
@@ -307,8 +307,8 @@ namespace Learning.Foundation.Pipelines.RenderField
         /// <returns>The field tag.</returns>
         private static Tag CreateFieldTag(string tagName, RenderFieldArgs args, string controlID)
         {
-            Assert.ArgumentNotNull((object)tagName, nameof(tagName));
-            Assert.ArgumentNotNull((object)args, nameof(args));
+            Assert.ArgumentNotNull(tagName, nameof(tagName));
+            Assert.ArgumentNotNull(args, nameof(args));
             Tag fieldTag = new Tag(tagName)
             {
                 ID = controlID + "_edit"
@@ -316,7 +316,5 @@ namespace Learning.Foundation.Pipelines.RenderField
             fieldTag.Add("scFieldType", args.FieldTypeKey);
             return fieldTag;
         }
-
-
     }
 }
