@@ -3,7 +3,7 @@ using Sitecore.Data.Items;
 using Sitecore.Pipelines.RenderField;
 using Sitecore.Xml.Xsl;
 
-namespace Learning.Foundation.Pipelines.RenderField
+namespace CTS.Foundation.Pipelines.RenderField
 {
     public class GetLazyLoadImageFieldValue
     {

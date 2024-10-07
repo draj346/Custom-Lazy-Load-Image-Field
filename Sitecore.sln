@@ -7,14 +7,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Environment", "Environment"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Foundation", "Foundation", "{D9DE8412-988B-448C-890C-33B6C0A72290}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.Environment.CMS", "src\Environment\website\Sitecore.Environment.CMS.csproj", "{2CA64A1D-5E04-4868-B649-6A6887B572A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTS.Environment.CMS", "src\Environment\website\CTS.Environment.CMS.csproj", "{2CA64A1D-5E04-4868-B649-6A6887B572A9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8FB744A4-657B-4A68-8691-A9C928D3F499} = {8FB744A4-657B-4A68-8691-A9C928D3F499}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CustomFields", "CustomFields", "{7F41652F-CDDA-4889-9703-8860A359DE82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitecore.Foundation.CustomFields", "src\Foundation\CustomFields\website\Sitecore.Foundation.CustomFields.csproj", "{8FB744A4-657B-4A68-8691-A9C928D3F499}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CTS.Foundation.CustomFields", "src\Foundation\CustomFields\website\CTS.Foundation.CustomFields.csproj", "{8FB744A4-657B-4A68-8691-A9C928D3F499}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

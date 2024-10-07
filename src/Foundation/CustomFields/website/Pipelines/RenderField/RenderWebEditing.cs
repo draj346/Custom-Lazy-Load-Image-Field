@@ -21,7 +21,7 @@ using System.IO;
 using System.Web;
 using System.Web.UI;
 
-namespace Learning.Foundation.Pipelines.RenderField
+namespace CTS.Foundation.Pipelines.RenderField
 {
     public class RenderWebEditing
     {
